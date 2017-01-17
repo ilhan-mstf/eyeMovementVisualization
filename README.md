@@ -1,2 +1,2 @@
-# eyeMovementVisualization
-Visualization of eye movement data in reading text.
+# Eye Movement Visualization
+This project visualizes eye movement data in reading.
