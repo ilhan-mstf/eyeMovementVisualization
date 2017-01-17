@@ -2,55 +2,66 @@ var data = [{
   duration: 200,
   x1: 100,
   x2: 100,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }, {
   duration: 50,
   x1: 100,
   x2: 200,
-  y: 200
+  y: 200,
+  type: 'saccade'
 }, {
   duration: 180,
   x1: 200,
   x2: 200,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }, {
   duration: 35,
   x1: 200,
   x2: 320,
-  y: 200
+  y: 200,
+  type: 'saccade'
 }, {
   duration: 220,
   x1: 320,
   x2: 320,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }, {
   duration: 55,
   x1: 320,
   x2: 450,
-  y: 200
+  y: 200,
+  type: 'saccade'
 }, {
   duration: 200,
   x1: 450,
   x2: 450,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }, {
   duration: 20,
   x1: 450,
   x2: 360,
-  y: 200
+  y: 200,
+  type: 'saccade'
 }, {
   duration: 300,
   x1: 360,
   x2: 360,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }, {
   duration: 40,
   x1: 360,
   x2: 530,
-  y: 200
+  y: 200,
+  type: 'saccade'
 }, {
   duration: 200,
   x1: 530,
   x2: 530,
-  y: 0
+  y: 200,
+  type: 'fixation'
 }];
