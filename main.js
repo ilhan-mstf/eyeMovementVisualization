@@ -4,13 +4,16 @@ window.onload = function() {
     height = $(document).height();
 
   var saccadeColor = '#F6004F',
+    regressionColor = '#00FFFF',
     fixationColor = '#666';
 
   var paused = false,
     finished = false,
     started = false;
 
-  var svg = d3.select('#animationCanvas').append('svg').attr('width', width).attr('height', height);
+  var svg = d3.select('#animationCanvas').append('svg').attr('width', width).attr('height', height),
+      lineGroup = svg.append('g'),
+      circleGroup = svg.append('g');
 
   function startAnimation() {
     started = true;
@@ -45,15 +48,15 @@ window.onload = function() {
   function drawLine(movement) {
     // line = 'M ' + movement.x1 + ' ' + movement.y + ' L ' + movement.x2 + ' ' + movement.y
     var line = 'M ' + movement.x1 + ' ' + movement.y + ' Q ' + (movement.x1 + (movement.x2 - movement.x1) / 2) + ' ' + (movement.y - 30) + ' ' + movement.x2 + ' ' + movement.y
-    return svg.append('path')
+    return lineGroup.append('path')
       .attr('d', line)
-      .attr('stroke', saccadeColor)
+      .attr('stroke', movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor)
       .attr('stroke-width', '1')
       .attr('fill', 'none');
   }
 
   function drawCircle(movement) {
-    return svg.append('circle')
+    return circleGroup.append('circle')
       .attr('cx', movement.x1)
       .attr('cy', movement.y)
       .attr('r', 0)
