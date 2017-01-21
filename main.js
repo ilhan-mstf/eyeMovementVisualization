@@ -78,19 +78,16 @@ window.onload = function() {
       .attr('stroke-dashoffset', totalLength)
       .transition()
       .duration(duration)
-      .ease('linear')
       .attr('stroke-dashoffset', 0)
-      .each('end', callback);
+      .on('end', callback);
   }
 
   function animateCircle(duration, circle, callback) {
     return circle
       .transition()
       .duration(duration)
-      .ease('linear')
-      .attr('stroke-dashoffset', 0)
       .attr('r', duration / 20)
-      .each('end', callback);
+      .on('end', callback);
   }
 
   /* UI Bindings */
