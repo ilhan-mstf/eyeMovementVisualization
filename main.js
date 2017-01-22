@@ -7,84 +7,106 @@ window.onload = function() {
   var width = $(document).width(),
     height = $(document).height();
 
-  var colors = ['#33104a', '#4b186c', '#63218f', '#8f3192', '#c0458a', '#e8608a', '#ef9198', '#f8c1a8'];
+  var colors = ['#3c1357', '#61208d', '#a73b8f', '#e8638b', '#f4aea3'];
 
-  var saccadeColor = '#F6004F',
-    regressionColor = '#00FFFF',
-    fixationColor = '#666';
+  var saccadeColor = '#f4aea3',
+    regressionColor = '#f4aea3',
+    fixationColor = '#3c1357';
 
   var paused = false,
     finished = false,
-    started = false;
+    started = false,
+    stopped = false;
 
-  var debugEnabled = true;
+  var debugEnabled = true,
+    playBackAnimationEnabled = true,
+    timelineAnimationEnabled = true,
+    densityAnimationEnabled = true;
 
   var timelineOffset = 30,
     densityOffset = -30;
 
-  var svg = d3.select('#animationCanvas').append('svg').attr('width', width).attr('height', height),
-    densityGroup = svg.append('g').attr('id', 'densityGroup'),
-    timelineGroup = svg.append('g').attr('id', 'timelineGroup'),
-    playBackGroup = svg.append('g').attr('id', 'playBackGroup'),
-    playBackLineGroup = svg.append('g').attr('id', 'playBackLineGroup'),
-    playBackCircleGroup = svg.append('g').attr('id', 'playBackCircleGroup');
-
-  var playBackAnimationEnabled = true,
-    timelineAnimationEnabled = true,
-    densityAnimationEnabled = true;
-
-  // TODO data calibration nasıl yapılmalı.
+  var svg,
+    densityGroup,
+    timelineGroup,
+    playBackGroup,
+    playBackLineGroup,
+    playBackCircleGroup;
 
   /**************************************************
    * Animation Stuff                                *
    **************************************************/
-   
-   // Calibrate data
-   (function() {
-     data.trials.forEach(function(trial) {
-       trial.forEach(function(movement) {
-         if (movement.type === 'fixation') {
-           movement.x += data.xFix;
-           movement.y += data.yFix;
-         } else if (movement.type === 'saccade') {
-           movement.x1 += data.xFix;
-           movement.x2 += data.xFix;
-           movement.y += data.yFix;
-         }
-       })
-     })
-   })();
 
-  function reset() {
-    // FIXME remove çalışmıyor.
+  // Calibrate data
+  (function() {
+    data.trials.forEach(function(trial) {
+      trial.forEach(function(movement) {
+        if (movement.type === 'fixation') {
+          movement.x += data.xFix;
+          movement.y += data.yFix;
+        } else if (movement.type === 'saccade') {
+          movement.x1 += data.xFix;
+          movement.x2 += data.xFix;
+          movement.y += data.yFix;
+        }
+      })
+    })
+  })();
+
+  function debug(funcName) {
+    printLog(performance.now() + ' ' + funcName);
+  }
+
+  function printLog(msg) {
+    if (debugEnabled) {
+      console.log(msg);
+    }
+  }
+
+  function init() {
+    timelineOffset = 30;
+    densityOffset = -30;
+
+    svg = d3.select('#animationCanvas').append('svg').attr('width', width).attr('height', height);
+    densityGroup = svg.append('g').attr('id', 'densityGroup');
+    timelineGroup = svg.append('g').attr('id', 'timelineGroup');
+    playBackGroup = svg.append('g').attr('id', 'playBackGroup');
+    playBackLineGroup = playBackGroup.append('g').attr('id', 'playBackLineGroup');
+    playBackCircleGroup = playBackGroup.append('g').attr('id', 'playBackCircleGroup');
+
+    stopped = false;
+  }
+
+  function resetForNextTrial() {
     playBackGroup.remove();
     playBackGroup = svg.append('g').attr('id', 'playBackGroup');
-    playBackLineGroup = svg.append('g').attr('id', 'playBackLineGroup');
-    playBackCircleGroup = svg.append('g').attr('id', 'playBackCircleGroup');
+    playBackLineGroup = playBackGroup.append('g').attr('id', 'playBackLineGroup');
+    playBackCircleGroup = playBackGroup.append('g').attr('id', 'playBackCircleGroup');
 
     timelineOffset = 30;
     densityOffset = -30;
   }
 
-  function debug(funcName) {
-    if (debugEnabled) {
-      console.log(performance.now() + funcName);
-    }
-  }
-
   function startAnimation() {
+    printLog('started');
+    init();
+
     started = true;
     finished = false;
 
     // TODO update controls
 
     // Read position of text from data.
-    $('.read-text').css({top: data.sentenceY, left: data.sentenceX}).fadeIn(function() {
+    $('#readText').css({
+      top: data.sentenceY,
+      left: data.sentenceX
+    }).fadeIn(function() {
       drawTrials(0);
     });
   }
 
   function endAnimation() {
+    printLog('finished');
     finished = true;
     started = false;
     // TODO update controls
@@ -94,10 +116,15 @@ window.onload = function() {
     debug('drawTrials');
     // TODO update message.
     return drawMovements(data.trials[i], i, 0, function() {
+
+      if (stopped) {
+        return;
+      }
+
+      // Clean playback area.
+      resetForNextTrial();
       if (i + 1 < data.trials.length) {
         setTimeout(function() {
-          // Clean playback area.
-          reset();
           // Call next trial.
           setTimeout(function() {
             drawTrials(i + 1);
@@ -112,6 +139,11 @@ window.onload = function() {
   function drawMovements(trial, i, j, callback) {
     debug('drawMovements');
     return animateAll(trial[j], function() {
+
+      if (stopped) {
+        return;
+      }
+
       if (j + 1 < trial.length) {
         drawMovements(trial, i, j + 1, callback);
       } else {
@@ -132,8 +164,8 @@ window.onload = function() {
     return obj.group.append('circle')
       .attr('cx', obj.x)
       .attr('cy', obj.y)
-      .attr('r', 0)
       .attr('fill', obj.color)
+      .attr('r', 0)
       .attr('opacity', .6);
   }
 
@@ -202,6 +234,7 @@ window.onload = function() {
         x: movement.x,
         y: movement.y,
         r: movement.duration / 30,
+        color: fixationColor,
         duration: movement.duration
       }
     }
@@ -297,9 +330,22 @@ window.onload = function() {
 
   /* Back */
   $('#back').click(function() {
-    // TODO Stop animation.
-    // TODO Clear all svg.
-    // TODO Remove #demo from url.
+    // FIXME Stop animation.
+    stopped = true;
+
+    // Clear all svg.
+    d3.select("svg").remove();
+
+    // Fade out text.
+    $('#readText').fadeOut();
+
+    // Remove #demo from url.
+    if (window.history.pushState) {
+      window.history.pushState('', '/', window.location.pathname)
+    } else {
+      window.location.hash = '';
+    }
+
     $('#animationCanvas').fadeOut(function() {
       $('#projectInfo').fadeIn();
     });
