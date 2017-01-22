@@ -7,12 +7,7 @@ window.onload = function() {
   var width = $(document).width(),
     height = $(document).height();
 
-  // TODO colors...
-  var colors = {
-    saccade: '',
-    regression: '',
-    fixation: ''
-  };
+  var colors = ['#33104a', '#4b186c', '#63218f', '#8f3192', '#c0458a', '#e8608a', '#ef9198', '#f8c1a8'];
 
   var saccadeColor = '#F6004F',
     regressionColor = '#00FFFF',
@@ -38,11 +33,30 @@ window.onload = function() {
     timelineAnimationEnabled = true,
     densityAnimationEnabled = true;
 
+  // TODO data calibration nasıl yapılmalı.
+
   /**************************************************
    * Animation Stuff                                *
    **************************************************/
+   
+   // Calibrate data
+   (function() {
+     data.trials.forEach(function(trial) {
+       trial.forEach(function(movement) {
+         if (movement.type === 'fixation') {
+           movement.x += data.xFix;
+           movement.y += data.yFix;
+         } else if (movement.type === 'saccade') {
+           movement.x1 += data.xFix;
+           movement.x2 += data.xFix;
+           movement.y += data.yFix;
+         }
+       })
+     })
+   })();
 
   function reset() {
+    // FIXME remove çalışmıyor.
     playBackGroup.remove();
     playBackGroup = svg.append('g').attr('id', 'playBackGroup');
     playBackLineGroup = svg.append('g').attr('id', 'playBackLineGroup');
@@ -61,12 +75,19 @@ window.onload = function() {
   function startAnimation() {
     started = true;
     finished = false;
-    drawTrials(0);
+
+    // TODO update controls
+
+    // Read position of text from data.
+    $('.read-text').css({top: data.sentenceY, left: data.sentenceX}).fadeIn(function() {
+      drawTrials(0);
+    });
   }
 
   function endAnimation() {
     finished = true;
     started = false;
+    // TODO update controls
   }
 
   function drawTrials(i) {
@@ -74,27 +95,27 @@ window.onload = function() {
     // TODO update message.
     return drawMovements(data.trials[i], i, 0, function() {
       if (i + 1 < data.trials.length) {
-        drawTrials(i + 1);
-      } else {
-        endAnimation();
-      }
-    });
-  }
-
-  function drawMovements(trial, i, j) {
-    debug('drawMovements');
-    return animateAll(trial[j], function() {
-      if (j + 1 < trial.length) {
-        drawMovements(trial, i, j + 1);
-      } else {
         setTimeout(function() {
           // Clean playback area.
           reset();
           // Call next trial.
           setTimeout(function() {
             drawTrials(i + 1);
-          }, 2000);
-        }, 5000);
+          }, 1000);
+        }, 4000);
+      } else {
+        endAnimation();
+      }
+    });
+  }
+
+  function drawMovements(trial, i, j, callback) {
+    debug('drawMovements');
+    return animateAll(trial[j], function() {
+      if (j + 1 < trial.length) {
+        drawMovements(trial, i, j + 1, callback);
+      } else {
+        callback();
       }
     });
   }
@@ -260,11 +281,48 @@ window.onload = function() {
    * UI Bindings                                    *
    **************************************************/
 
+  // Init tooltip
+  $(function() {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
   /* Start Animation */
-  $('#startButton').click(function() {
-    $(this).fadeOut(function() {
-      startAnimation();
+  $('#demo').click(function() {
+    $('#projectInfo').fadeOut(function() {
+      $('#animationCanvas').fadeIn(function() {
+        startAnimation();
+      });
     });
+  });
+
+  /* Back */
+  $('#back').click(function() {
+    // TODO Stop animation.
+    // TODO Clear all svg.
+    // TODO Remove #demo from url.
+    $('#animationCanvas').fadeOut(function() {
+      $('#projectInfo').fadeIn();
+    });
+  });
+
+  /* Resume */
+  $('#resume').click(function() {
+    // TODO Resume animation.
+  });
+
+  /* Pause */
+  $('#pause').click(function() {
+    // TODO Pause animation.
+  });
+
+  /* Stop */
+  $('#stop').click(function() {
+    // TODO Stop animation.
+  });
+
+  /* Restart */
+  $('#restart').click(function() {
+    // TODO Restart animation.
   });
 
 }

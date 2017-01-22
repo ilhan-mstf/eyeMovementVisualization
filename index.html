@@ -21,15 +21,39 @@
 
 <body>
 
-	<div id="animationCanvas" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></div>
-
-	<div id="container" style="position: absolute; top: 20px; bottom: 20px; left: 20px; right: 20px;">
+	<!-- Project info -->
+	<div id="projectInfo" class="project-info">
 		<h1>Eye Movement Visualization</h1>
-		<div class="read-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-		<div class="startButton" id="startButton">
-			<div style="padding-top: 10px;">Start</div>
+		<p class="lead">This project visualizes eye movements data recorded via eye trackers during reading.</p>
+		<p>Eye tracking is a hot research method to understand how humans read. It provides measurable data. During reading texts there are two main eye movements: saccades and fixations.</p>
+		<a class="btn btn-default" href="#demo" role="button" id="demo">View Sample</a>
+		<a class="btn btn-default" href="#custom" role="button" id="custom" data-toggle="tooltip" data-placement="right" title="Coming soon">Visualize Your Data</a>
+		<footer>
+			<a href="#details" data-toggle="tooltip" data-placement="top" title="Coming soon">Read Details</a> / <a href="#credits" data-toggle="tooltip" data-placement="top" title="Coming soon">Credits</a> / <a href="#contact" data-toggle="tooltip" data-placement="top"
+					title="Coming soon">Contact</a> / <a href="https://github.com/mustilica/eyeMovementVisualization">View on GitHub</a>
+		</footer>
+		<!-- Credits and Contact Popup -->
+	</div>
+
+	<!-- Upload area -->
+
+	<!-- Animation area -->
+	<div id="animationCanvas" class="animation-canvas">
+		<div class="controls">
+			<button type="button" class="btn btn-link" id="back">Back</button>
+			|
+			<button type="button" class="btn btn-link" id="resume">Resume</button>
+			<button type="button" class="btn btn-link" id="pause">Pause</button>
+			<button type="button" class="btn btn-link" id="stop">Stop</button>
+			<button type="button" class="btn btn-link" id="restart">Restart</button>
+			|
+			<!-- TODO switch for density, playback, timeline animations. -->
+
+			<!-- TODO add tips section -->
+
+			<!-- TODO add how it works section -->
 		</div>
-		<div style="position: absolute; bottom: 0;">Mustafa İlhan / METU COGS 553 Fall 2016</div>
+		<div class="read-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
 	</div>
 
 	<!-- jquery -->

@@ -3,58 +3,85 @@
 body {
   font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
   font-size: 12;
-  color: #F6004F;
-  background: #FFF;
+  color: #a73b8f;
+  background: #fff;
   overflow: hidden;
 }
 ::selection {
-  background: #F6004F;
-  color: #FFF;
+  background: #a93790;
+  color: #fff;
 }
-.startButton {
+h1 {
+  color: #3c1357;
+}
+.lead {
+  color: #61208d;
+}
+p {
+  color: #a73b8f;
+}
+.btn-default {
+  color: #e8638b;
+  background-color: #fff;
+  border-color: #e8638b;
+}
+.btn-default:hover,
+.btn-default:focus,
+.btn-default.focus,
+.btn-default:active,
+.btn-default.active,
+.btn-default:active:hover,
+.btn-default.active:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.btn-default:active.focus,
+.btn-default.active.focus {
+  color: #fff;
+  background-color: #e8638b;
+  border-color: #e8638b;
+}
+a, .btn-link {
+  color: #f4aea3;
+}
+a:hover,
+a:focus,
+a:active,
+.btn-link:hover,
+.btn-link:focus,
+.btn-link:active {
+  color: #a73b8f;
+  text-decoration: underline;
+}
+.project-info {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -21px;
-  margin-left: -61px;
-  width: 120px;
-  height: 40px;
-  text-align: center;
-  border: 1px solid;
-  font-size: 16px;
-  z-index: 999;
+  top: 20px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
 }
-.startButton:hover {
-  background: #F6004F;
-  color: #FFF;
-  cursor: pointer;
+.upload-area {
+  display: none;
 }
-.startButton:active {
-  background: #F6004F;
+.animation-canvas {
+  display: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
-.actionButton {
-  background: #F6004F;
-  color: #FFF;
-  padding: 4px 8px;
-  float: right;
-}
-.actionButton:hover {
-  background: none;
-  color: #BE6868;
-  cursor: pointer;
-}
-.actionButton:active {
-  background: #F6004F;
-  color: #222;
-}
-#gridCanvas {
-  z-index: 1;
+footer {
+  position: absolute;
+  bottom: 0;
+  color: #f4aea3;
 }
 .read-text {
-  color: #444;
-  font-size: 14px;
+  display: none;
   position: absolute;
-  top: 180px;
-  left: 60px;
+  color: #3c1357;
+  font-size: 14px;
   opacity: .4;
+}
+.controls {
+  /*padding: 0 20px;*/
 }

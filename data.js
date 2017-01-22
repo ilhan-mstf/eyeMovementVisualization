@@ -1,11 +1,13 @@
 var data = {
   windowWidth: 1024,
-  windowHeight: 1024,
+  windowHeight: 768,
   sentence: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  sentenceX: 100,
-  sentenceY: 120,
-  fontSize: 22,
+  sentenceX: 20,
+  sentenceY: 180,
+  fontSize: 14,
   sentenceUrl: '',
+  xFix: -60,
+  yFix: -50,
   trials: [
     /******************
      * trial 1
