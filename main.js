@@ -1,7 +1,18 @@
 window.onload = function() {
 
+  /**************************************************
+   * Global Variables                               *
+   **************************************************/
+
   var width = $(document).width(),
     height = $(document).height();
+
+  // TODO colors...
+  var colors = {
+    saccade: '',
+    regression: '',
+    fixation: ''
+  };
 
   var saccadeColor = '#F6004F',
     regressionColor = '#00FFFF',
@@ -11,14 +22,46 @@ window.onload = function() {
     finished = false,
     started = false;
 
+  var debugEnabled = true;
+
+  var timelineOffset = 30,
+    densityOffset = -30;
+
   var svg = d3.select('#animationCanvas').append('svg').attr('width', width).attr('height', height),
-      lineGroup = svg.append('g'),
-      circleGroup = svg.append('g');
+    densityGroup = svg.append('g').attr('id', 'densityGroup'),
+    timelineGroup = svg.append('g').attr('id', 'timelineGroup'),
+    playBackGroup = svg.append('g').attr('id', 'playBackGroup'),
+    playBackLineGroup = svg.append('g').attr('id', 'playBackLineGroup'),
+    playBackCircleGroup = svg.append('g').attr('id', 'playBackCircleGroup');
+
+  var playBackAnimationEnabled = true,
+    timelineAnimationEnabled = true,
+    densityAnimationEnabled = true;
+
+  /**************************************************
+   * Animation Stuff                                *
+   **************************************************/
+
+  function reset() {
+    playBackGroup.remove();
+    playBackGroup = svg.append('g').attr('id', 'playBackGroup');
+    playBackLineGroup = svg.append('g').attr('id', 'playBackLineGroup');
+    playBackCircleGroup = svg.append('g').attr('id', 'playBackCircleGroup');
+
+    timelineOffset = 30;
+    densityOffset = -30;
+  }
+
+  function debug(funcName) {
+    if (debugEnabled) {
+      console.log(performance.now() + funcName);
+    }
+  }
 
   function startAnimation() {
     started = true;
     finished = false;
-    drawMovements(0);
+    drawTrials(0);
   }
 
   function endAnimation() {
@@ -26,71 +69,198 @@ window.onload = function() {
     started = false;
   }
 
-  function drawMovements(i) {
-    return animateElement(data[i], drawElement(data[i]), function() {
-      if (i + 1 < data.length) {
-        drawMovements(i + 1);
+  function drawTrials(i) {
+    debug('drawTrials');
+    // TODO update message.
+    return drawMovements(data.trials[i], i, 0, function() {
+      if (i + 1 < data.trials.length) {
+        drawTrials(i + 1);
       } else {
         endAnimation();
       }
     });
   }
 
-  function drawElement(movement) {
-    if (movement.type === 'saccade') {
-      return drawLine(movement);
-    } else if (movement.type === 'fixation') {
-      return drawCircle(movement);
-    }
-    return null;
+  function drawMovements(trial, i, j) {
+    debug('drawMovements');
+    return animateAll(trial[j], function() {
+      if (j + 1 < trial.length) {
+        drawMovements(trial, i, j + 1);
+      } else {
+        setTimeout(function() {
+          // Clean playback area.
+          reset();
+          // Call next trial.
+          setTimeout(function() {
+            drawTrials(i + 1);
+          }, 2000);
+        }, 5000);
+      }
+    });
   }
 
-  function drawLine(movement) {
-    // line = 'M ' + movement.x1 + ' ' + movement.y + ' L ' + movement.x2 + ' ' + movement.y
-    var line = 'M ' + movement.x1 + ' ' + movement.y + ' Q ' + (movement.x1 + (movement.x2 - movement.x1) / 2) + ' ' + (movement.y - 30) + ' ' + movement.x2 + ' ' + movement.y
-    return lineGroup.append('path')
-      .attr('d', line)
-      .attr('stroke', movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor)
+  function drawLine(obj) {
+    return obj.group.append('path')
+      .attr('d', obj.path)
+      .attr('stroke', obj.color)
       .attr('stroke-width', '1')
       .attr('fill', 'none');
   }
 
-  function drawCircle(movement) {
-    return circleGroup.append('circle')
-      .attr('cx', movement.x1)
-      .attr('cy', movement.y)
+  function drawCircle(obj) {
+    return obj.group.append('circle')
+      .attr('cx', obj.x)
+      .attr('cy', obj.y)
       .attr('r', 0)
-      .attr('fill', fixationColor);
+      .attr('fill', obj.color)
+      .attr('opacity', .6);
   }
 
-  function animateElement(movement, element, callback) {
-    if (movement.type === 'saccade') {
-      return animateLine(element.node().getTotalLength(), movement.duration, element, callback);
-    } else if (movement.type === 'fixation') {
-      return animateCircle(movement.duration, element, callback);
-    }
-    return;
+  function drawRectangle(obj) {
+    return obj.group.append('rect')
+      .attr('x', obj.x)
+      .attr('y', obj.y)
+      .attr('width', obj.width)
+      .attr('height', 0)
+      .attr('fill', obj.color)
+      .attr('opacity', .1);
   }
 
-  function animateLine(totalLength, duration, path, callback) {
+  function animateLine(obj, callback) {
+    var path = drawLine(obj),
+      totalLength = path.node().getTotalLength();
     return path
       .attr('stroke-dasharray', totalLength + ' ' + totalLength)
       .attr('stroke-dashoffset', totalLength)
       .transition()
-      .duration(duration)
+      .duration(obj.duration)
       .attr('stroke-dashoffset', 0)
       .on('end', callback);
   }
 
-  function animateCircle(duration, circle, callback) {
-    return circle
+  function animateCircle(obj, callback) {
+    return drawCircle(obj)
       .transition()
-      .duration(duration)
-      .attr('r', duration / 20)
+      .duration(obj.duration)
+      .attr('r', obj.r)
       .on('end', callback);
   }
 
-  /* UI Bindings */
+  function animateRectangle(obj, callback) {
+    return drawRectangle(obj)
+      .transition()
+      .duration(obj.duration)
+      .attr('y', obj.y - obj.duration / 5)
+      .attr('height', obj.duration / 5)
+      .on('end', callback);
+  }
+
+  function animateAll(movement, callback) {
+    playBackAnimation(movement);
+    timelineAnimation(movement);
+    densityAnimation(movement);
+    setTimeout(callback, movement.duration);
+  }
+
+  /**
+   *
+   */
+  function playBackAnimation(movement, callback) {
+    function getSaccadeData() {
+      return {
+        group: playBackLineGroup,
+        path: 'M ' + movement.x1 + ' ' + movement.y + ' Q ' + (movement.x1 + (movement.x2 - movement.x1) / 2) + ' ' + (movement.y - 30) + ' ' + movement.x2 + ' ' + movement.y,
+        color: movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor,
+        duration: movement.duration
+      }
+    }
+
+    function getFixationData() {
+      return {
+        group: playBackCircleGroup,
+        x: movement.x,
+        y: movement.y,
+        r: movement.duration / 30,
+        duration: movement.duration
+      }
+    }
+
+    if (playBackAnimationEnabled) {
+      if (movement.type === 'saccade') {
+        return animateLine(getSaccadeData(movement), callback);
+      } else if (movement.type === 'fixation') {
+        return animateCircle(getFixationData(movement), callback);
+      }
+      return;
+    }
+  }
+
+  /**
+   *
+   */
+  function timelineAnimation(movement, callback) {
+    function getSaccadeData() {
+      return {
+        group: timelineGroup,
+        path: 'M ' + movement.x1 + ' ' + (movement.y + timelineOffset) + ' H ' + movement.x2,
+        color: movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor,
+        duration: movement.duration
+      }
+    }
+
+    function getFixationData() {
+      var tOffset = timelineOffset;
+      timelineOffset += movement.duration / 10;
+      return {
+        group: timelineGroup,
+        path: 'M ' + movement.x + ' ' + (movement.y + tOffset) + ' V ' + (movement.y + timelineOffset),
+        color: fixationColor,
+        duration: movement.duration
+      }
+    }
+
+    if (timelineAnimationEnabled) {
+      if (movement.type === 'saccade') {
+        // draw horizontal line
+        return animateLine(getSaccadeData(movement), callback);
+      } else if (movement.type === 'fixation') {
+        // draw vertical line
+        return animateLine(getFixationData(movement), callback);
+      }
+      return;
+    }
+  }
+
+  /**
+   *
+   */
+  function densityAnimation(movement, callback) {
+    function getFixationData(movement) {
+      return {
+        group: densityGroup,
+        x: (movement.x - 5),
+        y: (movement.y + densityOffset),
+        width: 10,
+        height: movement.duration / 5,
+        color: fixationColor,
+        duration: movement.duration
+      }
+    }
+
+    if (densityAnimationEnabled) {
+      if (movement.type === 'fixation') {
+        // draw rectangle
+        return animateRectangle(getFixationData(movement), callback);
+      }
+      return;
+    }
+  }
+
+  /**************************************************
+   * UI Bindings                                    *
+   **************************************************/
+
+  /* Start Animation */
   $('#startButton').click(function() {
     $(this).fadeOut(function() {
       startAnimation();

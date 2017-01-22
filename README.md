@@ -12,3 +12,5 @@ This project visualizes eye movement data in reading.
 - filter, (e.g. show fixations above given threshold)
 - show pop-up on fixations
 - customize bootstrap.
+- add credits section.
+- ~~alternative Visualizations.~~
