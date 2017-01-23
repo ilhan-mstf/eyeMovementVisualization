@@ -27,14 +27,13 @@
 		<p class="lead">This project visualizes eye movements data recorded via eye trackers during reading.</p>
 		<p>Eye tracking is a hot research method to understand how humans read. It provides measurable data. During reading texts there are two main eye movements: saccades and fixations.</p>
 		<a class="btn btn-default" href="#demo" role="button" id="demo">View Sample</a>
-		<a class="btn btn-default" href="#custom" role="button" id="custom" data-toggle="tooltip" data-placement="right" title="Coming soon">Visualize Your Data</a>
+		<a class="btn btn-default" href="#custom" role="button" id="custom" data-toggle="modal" data-target="#customVisModal">Visualize Your Data</a>
 		<footer>
-			<a href="#details" data-toggle="tooltip" data-placement="top" title="Coming soon">Read Details</a> / <a href="#credits" data-toggle="tooltip" data-placement="top" title="Coming soon">Credits</a> / <a href="#contact" data-toggle="tooltip" data-placement="top" title="Coming soon">Contact</a> / <a href="https://github.com/mustilica/eyeMovementVisualization">View on GitHub</a>
+			<a href="#details" data-toggle="tooltip" data-placement="top" title="Coming soon">Read Details</a> / <a href="#credits" data-toggle="tooltip" data-placement="top" title="Coming soon">Credits</a> / <a href="#contact" data-toggle="tooltip" data-placement="top"
+					title="Coming soon">Contact</a> / <a href="https://github.com/mustilica/eyeMovementVisualization">View on GitHub</a>
 		</footer>
 		<!-- Credits and Contact Popup -->
 	</div>
-
-	<!-- Upload area -->
 
 	<!-- Animation area -->
 	<div id="animationCanvas" class="animation-canvas">
@@ -50,6 +49,40 @@
 			<button type="button" class="btn btn-link" id="how" data-toggle="tooltip" data-placement="bottom" title="Coming soon">How it works</button>
 		</div>
 		<div id="readText" class="read-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+	</div>
+
+	<!-- Custom Visualization Modal -->
+	<div class="modal fade" id="customVisModal" tabindex="-1" role="dialog" aria-labelledby="customVisModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="customVisModalLabel">Visulize Your Data</h4>
+				</div>
+				<div class="modal-body">
+					<ul>
+						<li>First export data from eyelink data viewer. Go to <code>Reports -> Generate Fixation Report</code>. Select <code>x, y, z</code>. Save tab demitered file. (which is corresponds to csv file)</li>
+						<li>Contert csv file to json which is javascript object notation.</li>
+						<li>Copy and paste json below text area:
+							<textarea class="form-control" rows="3" placeholder="Enter your json here" id="json"></textarea>
+						</li>
+						<li>Enter your sentence:
+							<div class="form-group">
+							<input type="text" class="form-control" id="sentenceLine1" placeholder="Sentence Line 1">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="sentenceLine2" placeholder="Sentence Line 2">
+						</div>
+							<!-- Add more -->
+						</li>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-default">Visualize</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- jquery -->
