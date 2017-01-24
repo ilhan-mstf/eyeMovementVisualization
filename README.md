@@ -13,5 +13,5 @@ This project visualizes eye movement data in reading.
 - Show pop-up on fixations
 - Customize bootstrap.
 - Add credits section.
-- ~~alternative Visualizations.~~
+- ~~Alternative Visualizations.~~
 - Implement eyelink data reader and converter.

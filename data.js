@@ -24,7 +24,8 @@ var customData = {},
           duration: 50,
           x1: 100,
           x2: 200,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         },
         /*{
@@ -37,7 +38,8 @@ var customData = {},
              duration: 50,
              x1: 100,
              x2: 200,
-             y: 200,
+             y1: 200,
+             y2: 200,
              type: 'saccade'
            }, */
         {
@@ -50,7 +52,8 @@ var customData = {},
           duration: 28,
           x1: 200,
           x2: 248,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 220,
@@ -62,7 +65,8 @@ var customData = {},
           duration: 45,
           x1: 248,
           x2: 280,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 234,
@@ -74,7 +78,8 @@ var customData = {},
           duration: 20,
           x1: 280,
           x2: 342,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 340,
@@ -86,7 +91,8 @@ var customData = {},
           duration: 40,
           x1: 342,
           x2: 405,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 285,
@@ -98,7 +104,8 @@ var customData = {},
           duration: 41,
           x1: 405,
           x2: 450,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 232,
@@ -110,7 +117,8 @@ var customData = {},
           duration: 26,
           x1: 450,
           x2: 490,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 340,
@@ -122,7 +130,8 @@ var customData = {},
           duration: 43,
           x1: 490,
           x2: 532,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 296,
@@ -145,7 +154,8 @@ var customData = {},
         duration: 50,
         x1: 95,
         x2: 145,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 200,
@@ -157,7 +167,8 @@ var customData = {},
         duration: 50,
         x1: 145,
         x2: 209.1,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 245,
@@ -169,7 +180,8 @@ var customData = {},
         duration: 32,
         x1: 209.1,
         x2: 244,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 229,
@@ -181,7 +193,8 @@ var customData = {},
         duration: 43,
         x1: 244,
         x2: 286,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 254,
@@ -193,7 +206,8 @@ var customData = {},
         duration: 22,
         x1: 286,
         x2: 342,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 349,
@@ -205,7 +219,8 @@ var customData = {},
         duration: 42,
         x1: 342,
         x2: 401.2,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 284,
@@ -217,7 +232,8 @@ var customData = {},
         duration: 41,
         x1: 401.2,
         x2: 444,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 303,
@@ -229,7 +245,8 @@ var customData = {},
         duration: 26,
         x1: 444,
         x2: 487,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 450,
@@ -241,7 +258,8 @@ var customData = {},
         duration: 43,
         x1: 487,
         x2: 535,
-        y: 200,
+        y1: 200,
+        y2: 200,
         type: 'saccade'
       }, {
         duration: 312,
@@ -263,7 +281,8 @@ var customData = {},
           duration: 34,
           x1: 102,
           x2: 148.9,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 165,
@@ -275,7 +294,8 @@ var customData = {},
           duration: 50,
           x1: 148.9,
           x2: 211,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 245,
@@ -287,7 +307,8 @@ var customData = {},
           duration: 32,
           x1: 211,
           x2: 248.9,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 230,
@@ -299,7 +320,8 @@ var customData = {},
           duration: 43,
           x1: 248.9,
           x2: 289.8,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 274,
@@ -311,7 +333,8 @@ var customData = {},
           duration: 22,
           x1: 289.8,
           x2: 344.3,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 378.7,
@@ -323,7 +346,8 @@ var customData = {},
           duration: 42,
           x1: 344.3,
           x2: 398.4,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 260,
@@ -335,7 +359,8 @@ var customData = {},
           duration: 48.9,
           x1: 398.4,
           x2: 462,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 382.3,
@@ -348,7 +373,7 @@ var customData = {},
               duration: 26,
               x1: 444,
               x2: 487,
-              y: 200,
+              y1: 200, y2: 200,
               type: 'saccade'
             }, {
               duration: 450,
@@ -361,7 +386,8 @@ var customData = {},
           duration: 43,
           x1: 462,
           x2: 530.9,
-          y: 200,
+          y1: 200,
+          y2: 200,
           type: 'saccade'
         }, {
           duration: 343,

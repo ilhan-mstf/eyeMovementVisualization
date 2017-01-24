@@ -32,7 +32,6 @@
 			<a href="#details" data-toggle="tooltip" data-placement="top" title="Coming soon">Read Details</a> / <a href="#credits" data-toggle="tooltip" data-placement="top" title="Coming soon">Credits</a> / <a href="#contact" data-toggle="tooltip" data-placement="top"
 					title="Coming soon">Contact</a> / <a href="https://github.com/mustilica/eyeMovementVisualization">View on GitHub</a>
 		</footer>
-		<!-- Credits and Contact Popup -->
 	</div>
 
 	<!-- Animation area -->
@@ -48,7 +47,7 @@
 			<button type="button" class="btn btn-link" id="tips" data-toggle="tooltip" data-placement="bottom" title="Coming soon">Tips</button>
 			<button type="button" class="btn btn-link" id="how" data-toggle="tooltip" data-placement="bottom" title="Coming soon">How it works</button>
 		</div>
-		<div id="readText" class="read-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
+		<div id="readText" class="read-text"></div>
 	</div>
 
 	<!-- Custom Visualization Modal -->
@@ -63,8 +62,9 @@
 					<form>
 						<p class="bg-warning">This is a static web page, and doesn't upload or save any data to server.</p>
 						<ul>
-							<li>First, export your data from eyelink data viewer. Go to <code>Reports -> Generate Fixation Report</code>, and select <code>x, y, z</code> and save tab demitered file.</li>
-							<li>Contert data format from csv to json via <a href="http://www.csvjson.com/csv2json" target="_blank">this online tool</a>.</li>
+							<li>First, export your data from eyelink data viewer. Go to <code>Reports -> Fixation Report</code>, and select the fields: <code>TRIAL_INDEX, CURRENT_FIX_DURATION, CURRENT_FIX_X, CURRENT_FIX_Y, NEXT_SAC_START_TIME, NEXT_SAC_END_TIME</code> and save tab demitered file.</li>
+							<li>Replace <code>,</code> with <code>.</code></li>
+							<li>Contert exported data format from csv to json via <a href="http://www.csvjson.com/csv2json" target="_blank">this online tool</a>.</li>
 							<li>Copy and paste json to this text area:
 								<textarea class="form-control" rows="3" placeholder="Enter your json here" id="trialData"></textarea>
 							</li>
@@ -87,7 +87,7 @@
 									<input type="text" class="form-control" id="sentenceY" placeholder="Top (default 180px)">
 								</div>
 								<div class="form-group">
-									<input type="text" class="form-control" id="sentenceY" placeholder="Left (default 20px)">
+									<input type="text" class="form-control" id="sentenceX" placeholder="Left (default 20px)">
 								</div>
 							</li>
 							<li>

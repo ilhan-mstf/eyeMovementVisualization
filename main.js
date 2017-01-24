@@ -9,8 +9,8 @@ window.onload = function() {
 
   var colors = ['#3c1357', '#61208d', '#a73b8f', '#e8638b', '#f4aea3'];
 
-  var saccadeColor = '#f4aea3',
-    regressionColor = '#f4aea3',
+  var saccadeColor = '#ff00ff',/*'#f4aea3',*/
+    regressionColor = '#00ffff',/*'#f4aea3',*/
     fixationColor = '#3c1357';
 
   var paused = false,
@@ -33,26 +33,6 @@ window.onload = function() {
     playBackLineGroup,
     playBackCircleGroup;
 
-  /**************************************************
-   * Animation Stuff                                *
-   **************************************************/
-
-  // Calibrate data
-  (function() {
-    demoData.trials.forEach(function(trial) {
-      trial.forEach(function(movement) {
-        if (movement.type === 'fixation') {
-          movement.x += demoData.xFix;
-          movement.y += demoData.yFix;
-        } else if (movement.type === 'saccade') {
-          movement.x1 += demoData.xFix;
-          movement.x2 += demoData.xFix;
-          movement.y += demoData.yFix;
-        }
-      })
-    })
-  })();
-
   function debug(funcName) {
     printLog(performance.now() + ' ' + funcName);
   }
@@ -62,6 +42,10 @@ window.onload = function() {
       console.log(msg);
     }
   }
+
+  /**************************************************
+   * Animation Stuff                                *
+   **************************************************/
 
   function init() {
     timelineOffset = 30;
@@ -90,44 +74,64 @@ window.onload = function() {
   function startAnimation() {
     printLog('started');
     init();
-
     started = true;
     finished = false;
-
-    // TODO update controls
-
-    // Read position of text from data.
-    $('#readText').css({
-      top: demoData.sentenceY,
-      left: demoData.sentenceX
-    }).fadeIn(function() {
-      drawTrials(0);
-    });
+    updateControls();
+    addText(selectData());
   }
 
   function endAnimation() {
     printLog('finished');
     finished = true;
     started = false;
-    // TODO update controls
+    updateControls();
+    // Clean playback area.
+    setTimeout(resetForNextTrial, 4000);
   }
 
-  function drawTrials(i) {
-    debug('drawTrials');
-    // TODO update message.
-    return drawMovements(demoData.trials[i], i, 0, function() {
+  function selectData() {
+    //printLog(window.location.hash);
+    return window.location.hash === '#custom' ? customData : demoData;
+  }
 
+  function updateControls() {
+    // TODO Update controls
+  }
+
+  function addText(data) {
+    // TODO Automate sentence line append. (It is hard-coded now.)
+    $('#readText').css({
+        top: data.sentenceY,
+        left: data.sentenceX,
+        fontSize: data.fontSize + 'px'
+      }).append('<span id="line1">' + data.sentenceLine1 + '</span>')
+      .append('<span id="line2">' + data.sentenceLine2 + '</span>')
+      .fadeIn(function() {
+        drawTrials(data, 0);
+      });
+
+    if (typeof data.sentenceLine2 != 'undefined' && data.sentenceLine2 != '') {
+      // Get first line width and set.
+      data.sentenceLine2StartOffset = $('#line1').width();
+      printLog('sentenceLine2StartOffset: ' + data.sentenceLine2StartOffset);
+    }
+    calibrate(data);
+  }
+
+  function drawTrials(data, i) {
+    //debug('drawTrials');
+    // TODO Show current running trial as message. (e.g. trial1, trial2)
+    return drawMovements(data.trials[i], i, 0, function() {
       if (stopped) {
         return;
       }
-
-      // Clean playback area.
-      resetForNextTrial();
-      if (i + 1 < demoData.trials.length) {
+      if (i + 1 < data.trials.length) {
         setTimeout(function() {
+          // Clean playback area.
+          resetForNextTrial();
           // Call next trial.
           setTimeout(function() {
-            drawTrials(i + 1);
+            drawTrials(data, i + 1);
           }, 1000);
         }, 4000);
       } else {
@@ -137,7 +141,7 @@ window.onload = function() {
   }
 
   function drawMovements(trial, i, j, callback) {
-    debug('drawMovements');
+    //debug('drawMovements');
     return animateAll(trial[j], function() {
 
       if (stopped) {
@@ -222,7 +226,7 @@ window.onload = function() {
     function getSaccadeData() {
       return {
         group: playBackLineGroup,
-        path: 'M ' + movement.x1 + ' ' + movement.y + ' Q ' + (movement.x1 + (movement.x2 - movement.x1) / 2) + ' ' + (movement.y - 30) + ' ' + movement.x2 + ' ' + movement.y,
+        path: 'M ' + movement.x1 + ' ' + movement.y1 + ' Q ' + (movement.x1 + (movement.x2 - movement.x1) / 2) + ' ' + (movement.y1 - 30) + ' ' + movement.x2 + ' ' + movement.y2,
         color: movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor,
         duration: movement.duration
       }
@@ -256,7 +260,7 @@ window.onload = function() {
     function getSaccadeData() {
       return {
         group: timelineGroup,
-        path: 'M ' + movement.x1 + ' ' + (movement.y + timelineOffset) + ' H ' + movement.x2,
+        path: 'M ' + movement.x1 + ' ' + (movement.y1 + timelineOffset) + ' H ' + movement.x2,
         color: movement.x2 - movement.x1 < 0 ? regressionColor : saccadeColor,
         duration: movement.duration
       }
@@ -337,7 +341,7 @@ window.onload = function() {
     d3.select("svg").remove();
 
     // Fade out text.
-    $('#readText').fadeOut();
+    $('#readText').html('').fadeOut();
 
     // Remove #demo from url.
     if (window.history.pushState) {
@@ -345,6 +349,9 @@ window.onload = function() {
     } else {
       window.location.hash = '';
     }
+
+    // Reset custom data.
+    customData = {};
 
     $('#animationCanvas').fadeOut(function() {
       $('#projectInfo').fadeIn();
@@ -371,9 +378,6 @@ window.onload = function() {
     // TODO Restart animation.
   });
 
-  // TODO sentece yazmayı dinamik hale getirme.
-  // TODO Start animationda hangi datayı kullanacağını kontrol etme.
-
   $('#visualize').click(function() {
 
     try {
@@ -396,13 +400,21 @@ window.onload = function() {
 
     } catch (e) {
       console.error(e);
-      // TODO show error message.
+      // TODO Show error messages to user.
       return;
     }
 
+    window.location.hash = 'custom';
+
     // Close modal panel.
+    $('#customVisModal').modal('hide');
 
     // Start animation.
+    $('#projectInfo').fadeOut(function() {
+      $('#animationCanvas').fadeIn(function() {
+        startAnimation();
+      });
+    });
 
   });
 
@@ -458,8 +470,70 @@ window.onload = function() {
 
     // Remove user input.
     //customData.userTrials = 'undefined';
+  }
 
-    // TODO handle multiple lines
+  // Calibrate data
+  function calibrate(data) {
+    if (data.calibrated) {
+      return;
+    }
+
+    data.trials.forEach(function(trial) {
+      trial.forEach(function(movement) {
+        if (movement.type === 'fixation') {
+          movement.x += data.xFix;
+          movement.y += data.yFix;
+        } else if (movement.type === 'saccade') {
+          movement.x1 += data.xFix;
+          movement.x2 += data.xFix;
+          movement.y1 += data.yFix;
+          movement.y2 += data.yFix;
+        }
+      });
+    });
+
+    // line2 fix
+    if (typeof data.sentenceLine2StartOffset != 'undefined') {
+      // For saccade, x1-x2 and y1-y2 must be negative, and difference must be bigger than the others.
+      printLog('applying line2 fix');
+
+      data.trials.forEach(function(trial) {
+        var shift = false;
+        trial.forEach(function(movement) {
+          if (shift) {
+            if (movement.type === 'fixation') {
+              movement.x += data.sentenceLine2StartOffset + data.xFix;
+            } else if (movement.type === 'saccade') {
+            movement.x1 += data.sentenceLine2StartOffset + data.xFix;
+            movement.x2 += data.sentenceLine2StartOffset + data.xFix;
+            }
+          }
+          if (movement.type === 'saccade') {
+            if (movement.y1 - movement.y2 < 0 && movement.x1 - movement.x2 > 0 && movement.x1 - movement.x2 > 0.7 * data.sentenceLine2StartOffset) {
+              printLog('shift started diff: ' + (movement.x1 - movement.x2));
+              shift = true;
+              movement.x2 += data.sentenceLine2StartOffset;
+            }
+          }
+        });
+      });
+    }
+
+    // Stabilize all y positions.
+    data.trials.forEach(function(trial) {
+      trial.forEach(function(movement) {
+        if (movement.type === 'fixation') {
+          movement.y = data.sentenceY - 30;
+        } else if (movement.type === 'saccade') {
+          movement.y1 = data.sentenceY - 30;
+          movement.y2 = data.sentenceY - 30;
+        }
+      });
+    });
+
+    data.calibrated = true;
+
+    console.log(data);
   }
 
 }
