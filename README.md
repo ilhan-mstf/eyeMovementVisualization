@@ -14,4 +14,5 @@ This project visualizes eye movement data in reading.
 - Customize bootstrap.
 - Add credits section.
 - ~~Alternative Visualizations.~~
-- Implement eyelink data reader and converter.
+- ~~Implement eyelink data reader and converter.~~
+- Create test page for monospace font overlapping.
