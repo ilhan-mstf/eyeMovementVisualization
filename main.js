@@ -39,15 +39,15 @@ window.onload = function() {
 
   // Calibrate data
   (function() {
-    data.trials.forEach(function(trial) {
+    demoData.trials.forEach(function(trial) {
       trial.forEach(function(movement) {
         if (movement.type === 'fixation') {
-          movement.x += data.xFix;
-          movement.y += data.yFix;
+          movement.x += demoData.xFix;
+          movement.y += demoData.yFix;
         } else if (movement.type === 'saccade') {
-          movement.x1 += data.xFix;
-          movement.x2 += data.xFix;
-          movement.y += data.yFix;
+          movement.x1 += demoData.xFix;
+          movement.x2 += demoData.xFix;
+          movement.y += demoData.yFix;
         }
       })
     })
@@ -98,8 +98,8 @@ window.onload = function() {
 
     // Read position of text from data.
     $('#readText').css({
-      top: data.sentenceY,
-      left: data.sentenceX
+      top: demoData.sentenceY,
+      left: demoData.sentenceX
     }).fadeIn(function() {
       drawTrials(0);
     });
@@ -115,7 +115,7 @@ window.onload = function() {
   function drawTrials(i) {
     debug('drawTrials');
     // TODO update message.
-    return drawMovements(data.trials[i], i, 0, function() {
+    return drawMovements(demoData.trials[i], i, 0, function() {
 
       if (stopped) {
         return;
@@ -123,7 +123,7 @@ window.onload = function() {
 
       // Clean playback area.
       resetForNextTrial();
-      if (i + 1 < data.trials.length) {
+      if (i + 1 < demoData.trials.length) {
         setTimeout(function() {
           // Call next trial.
           setTimeout(function() {
@@ -370,5 +370,96 @@ window.onload = function() {
   $('#restart').click(function() {
     // TODO Restart animation.
   });
+
+  // TODO sentece yazmayı dinamik hale getirme.
+  // TODO Start animationda hangi datayı kullanacağını kontrol etme.
+
+  $('#visualize').click(function() {
+
+    try {
+      // Read inputs.
+      customData.userTrials = JSON.parse($('#trialData').val()) || [];
+      customData.sentenceLine1 = $('#sentenceLine1').val() || '';
+      customData.sentenceLine2 = $('#sentenceLine2').val() || '';
+      customData.fontSize = parseInt($('#fontSize').val(), 10) || 14;
+      customData.sentenceX = parseInt($('#sentenceX').val(), 10) || 20;
+      customData.sentenceY = parseInt($('#sentenceY').val(), 10) || 180;
+      customData.xFix = parseInt($('#xFix').val(), 10) || 0;
+      customData.yFix = parseInt($('#yFix').val(), 10) || 0;
+
+      console.log(customData);
+
+      // Convert user input.
+      convertCustomData();
+
+      console.log(customData);
+
+    } catch (e) {
+      console.error(e);
+      // TODO show error message.
+      return;
+    }
+
+    // Close modal panel.
+
+    // Start animation.
+
+  });
+
+  /**************************************************
+   * Convert custom data                            *
+   **************************************************/
+
+  function convertCustomData() {
+    var trials = [],
+      trial,
+      trialIndex = -1,
+      previousEvent;
+
+    customData.userTrials.forEach(function(data) {
+      // Check new trial
+      if (data.TRIAL_INDEX != trialIndex) {
+        if (typeof trial != 'undefined') {
+          // Push previous trial
+          trials.push(trial);
+        }
+        // Create new trial
+        trial = new Array();
+        trialIndex = data.TRIAL_INDEX;
+      }
+
+      if (typeof previousEvent != 'undefined') {
+        // Insert saccade
+        trial.push({
+          type: 'saccade',
+          duration: previousEvent.NEXT_SAC_END_TIME - previousEvent.NEXT_SAC_START_TIME,
+          x1: previousEvent.CURRENT_FIX_X,
+          x2: data.CURRENT_FIX_X,
+          y1: previousEvent.CURRENT_FIX_Y,
+          y2: data.CURRENT_FIX_Y
+        });
+      }
+
+      // Insert fixation event.
+      trial.push({
+        type: 'fixation',
+        duration: data.CURRENT_FIX_DURATION,
+        x: data.CURRENT_FIX_X,
+        y: data.CURRENT_FIX_Y
+      });
+      previousEvent = data;
+    });
+
+    // Append last trial.
+    trials.push(trial);
+
+    // Set trials to customData
+    customData.trials = trials;
+
+    // Remove user input.
+    //customData.userTrials = 'undefined';
+
+    // TODO handle multiple lines
+  }
 
 }

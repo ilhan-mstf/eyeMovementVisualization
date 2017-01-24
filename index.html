@@ -60,26 +60,51 @@
 					<h4 class="modal-title" id="customVisModalLabel">Visulize Your Data</h4>
 				</div>
 				<div class="modal-body">
-					<ul>
-						<li>First export data from eyelink data viewer. Go to <code>Reports -> Generate Fixation Report</code>. Select <code>x, y, z</code>. Save tab demitered file. (which is corresponds to csv file)</li>
-						<li>Contert csv file to json which is javascript object notation.</li>
-						<li>Copy and paste json below text area:
-							<textarea class="form-control" rows="3" placeholder="Enter your json here" id="json"></textarea>
-						</li>
-						<li>Enter your sentence:
-							<div class="form-group">
-							<input type="text" class="form-control" id="sentenceLine1" placeholder="Sentence Line 1">
-						</div>
-						<div class="form-group">
-							<input type="text" class="form-control" id="sentenceLine2" placeholder="Sentence Line 2">
-						</div>
-							<!-- Add more -->
-						</li>
-					</ul>
+					<form>
+						<p class="bg-warning">This is a static web page, and doesn't upload or save any data to server.</p>
+						<ul>
+							<li>First, export your data from eyelink data viewer. Go to <code>Reports -> Generate Fixation Report</code>, and select <code>x, y, z</code> and save tab demitered file.</li>
+							<li>Contert data format from csv to json via <a href="http://www.csvjson.com/csv2json" target="_blank">this online tool</a>.</li>
+							<li>Copy and paste json to this text area:
+								<textarea class="form-control" rows="3" placeholder="Enter your json here" id="trialData"></textarea>
+							</li>
+							<li>Enter your sentence:
+								<div class="form-group">
+									<input type="text" class="form-control" id="sentenceLine1" placeholder="Sentence Line 1">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="sentenceLine2" placeholder="Sentence Line 2">
+								</div>
+							</li>
+							<li>Sentence font size:
+								<div class="form-group">
+									<input type="text" class="form-control" id="fontSize" placeholder="Font size (default 14px)">
+								</div>
+							</li>
+							<li>
+								Sentence position:
+								<div class="form-group">
+									<input type="text" class="form-control" id="sentenceY" placeholder="Top (default 180px)">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="sentenceY" placeholder="Left (default 20px)">
+								</div>
+							</li>
+							<li>
+								Calibration offset:
+								<div class="form-group">
+									<input type="text" class="form-control" id="yFix" placeholder="Top">
+								</div>
+								<div class="form-group">
+									<input type="text" class="form-control" id="xFix" placeholder="Left">
+								</div>
+							</li>
+						</ul>
+					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-default">Visualize</button>
+					<button type="button" class="btn btn-default" id="visualize">Visualize</button>
 				</div>
 			</div>
 		</div>
