@@ -9,8 +9,10 @@ window.onload = function() {
 
   var colors = ['#3c1357', '#61208d', '#a73b8f', '#e8638b', '#f4aea3'];
 
-  var saccadeColor = '#ff00ff',/*'#f4aea3',*/
-    regressionColor = '#00ffff',/*'#f4aea3',*/
+  var saccadeColor = '#ff00ff',
+    /*'#f4aea3',*/
+    regressionColor = '#00ffff',
+    /*'#f4aea3',*/
     fixationColor = '#3c1357';
 
   var paused = false,
@@ -502,10 +504,10 @@ window.onload = function() {
         trial.forEach(function(movement) {
           if (shift) {
             if (movement.type === 'fixation') {
-              movement.x += data.sentenceLine2StartOffset + data.xFix;
+              movement.x += data.sentenceLine2StartOffset /*+ data.xFix*/ ;
             } else if (movement.type === 'saccade') {
-            movement.x1 += data.sentenceLine2StartOffset + data.xFix;
-            movement.x2 += data.sentenceLine2StartOffset + data.xFix;
+              movement.x1 += data.sentenceLine2StartOffset /*+ data.xFix*/ ;
+              movement.x2 += data.sentenceLine2StartOffset /*+ data.xFix*/ ;
             }
           }
           if (movement.type === 'saccade') {
